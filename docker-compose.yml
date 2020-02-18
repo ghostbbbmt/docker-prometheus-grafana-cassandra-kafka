@@ -1,0 +1,30 @@
+version: "3"
+services:
+  prometheus:
+    image: prom/prometheus
+    volumes:
+      - "./config/prometheus.yml:/etc/prometheus/prometheus.yml"
+      - "prometheus-data:/prometheus"
+    ports:
+      - "9090:9090"
+    depends_on:
+      - cassandra
+  cassandra:
+    image: crobox/cassandra
+    volumes:
+      - "cassandra-data:/var/lib/cassandra"
+    ports:
+      - "61621:61621"
+      - "9042:9042"
+  grafana:
+    image: grafana/grafana
+    depends_on:
+      - prometheus
+    volumes:
+      - "grafana-data:/var/lib/grafana"
+    ports:
+      - "3000:3000"
+volumes:
+  cassandra-data: null
+  prometheus-data: null
+  grafana-data: null
